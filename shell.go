@@ -185,11 +185,15 @@ func (c *Command) execute(cmd *exec.Cmd, call func() error) *Process {
 	p.Stderr = &stderr
 	err := call()
 	if err != nil {
+		log.Println(err)
 		if exiterr, ok := err.(*exec.ExitError); ok {
 			if stat, ok := exiterr.Sys().(syscall.WaitStatus); ok {
 				p.ExitStatus = int(stat.ExitStatus())
 				if Panic {
 					panic(p)
+				} else {
+					log.Println(p.ExitStatus)
+					log.Println(p)
 				}
 			}
 		} else {
